@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-    
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,16 +11,21 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h1>These are your stacks:</h1>
-<c:out value="${student}"></c:out>
+<h1>Dojo Form</h1>
 
-<ul>
-<c:forEach items="${myStacks}" var="s">
-	<li><c:out value="${s}"/></li>
-</c:forEach>
-</ul>
+<form action="/results" method="post">
+<p> Name: <input type="text" name="firstName" class="form-control" required> </p>
+<p> Email: <input type="text" name="email" class="form-control" required> </p>
+<p>Program: 
+	<select name="program" class="form-control" required>
+	<option value="java">Java</option>
+	<option value="MERN">MERN</option>
+	<option value="Azure">Azure</option>
+	</select>
+</p>
+<p><button>Submit</button></p>
+</form>
 
 
-<a href="/student">Student</a>
 </body>
 </html>
