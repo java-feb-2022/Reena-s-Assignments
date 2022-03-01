@@ -10,6 +10,7 @@
 <body>
 <h1>Submitted Info:</h1>
 <br />
+
 Name: <c:out value="${firstName}"></c:out>
 <br />
 Email:<c:out value="${email}"></c:out>
