@@ -56,7 +56,13 @@ public class NftArtController {
 	}
 	
 	@PutMapping("/update/{id}")
-	public String update(@ModelAttribute("editArt") Art art) {
+	public String update(@Valid @ModelAttribute("editArt") Art art,
+			BindingResult result) {
+		if(result.hasErrors()) {
+			return "edit.jsp";
+//			return "redirect:/edit/" + id;
+			
+		}
 		artService.updateArt(art);
 		return "redirect:/";
 		

@@ -25,13 +25,13 @@ public class HomeController {
 	private ExpenseService expenseService;
 	
 	@GetMapping("/")
-	public String index(Model viewModel,@ModelAttribute Expense newExpense) {
+	public String index(Model viewModel,@ModelAttribute("newExpense") Expense newExpense) {
 		viewModel.addAttribute("expenses",expenseService.getAllArts());
 		return "index.jsp";
 	}
 	
 	@PostMapping("/expense")
-	public String create(@Valid @ModelAttribute Expense newExpense, BindingResult result, Model viewModel ) {
+	public String create(@Valid @ModelAttribute("newExpense") Expense newExpense, BindingResult result, Model viewModel ) {
 		if(result.hasErrors()) {
 			viewModel.addAttribute("expenses",expenseService.getAllArts());
 			return "index.jsp";

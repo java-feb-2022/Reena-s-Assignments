@@ -37,7 +37,7 @@
 
 </table>
 <h1>New Book</h1>
-<form:form action="/expense" method="post" modelAttribute="expense">
+<form:form action="/expense" method="post" modelAttribute="newExpense">
     <p>
      	<form:errors class="text-danger" path="expenseName"/>
         <form:label path="expenseName">expenseName</form:label>
