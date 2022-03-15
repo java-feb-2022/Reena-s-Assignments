@@ -40,7 +40,9 @@ public class User {
     @Size(min=8, max=128, message="Confirm Password must be between 8 and 128 characters")
     private String confirm;
     
-  //Define relationship	
+//Define relationship	
+  @OneToMany(mappedBy ="user", fetch=FetchType.LAZY)
+  private List<Project> projects;
   
 
 	public Long getId() {
@@ -82,11 +84,15 @@ public class User {
 	public void setConfirm(String confirm) {
 		this.confirm = confirm;
 	}
-    
-    
-    
-   
-    
-   
-    
+
+	public List<Project> getProjects() {
+		return projects;
+	}
+
+	public void setProjects(List<Project> projects) {
+		this.projects = projects;
+	}
+     
+	
+	
 }

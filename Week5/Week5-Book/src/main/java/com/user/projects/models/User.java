@@ -1,6 +1,5 @@
 package com.user.projects.models;
 
-import java.awt.print.Book;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -40,8 +39,24 @@ public class User {
     @Size(min=8, max=128, message="Confirm Password must be between 8 and 128 characters")
     private String confirm;
     
-  //Define relationship	
-  
+    @OneToMany(mappedBy ="book", fetch=FetchType.LAZY)
+	 private List<Ratings> ratings;
+    
+    @OneToMany(mappedBy ="user", fetch=FetchType.LAZY)
+	 private List<Book> books;
+    
+    @OneToMany(mappedBy ="borrower", fetch=FetchType.LAZY)
+	 private List<Book> Borrowedbooks;
+
+
+
+	public List<Ratings> getRatings() {
+		return ratings;
+	}
+
+	public void setRatings(List<Ratings> ratings) {
+		this.ratings = ratings;
+	}
 
 	public Long getId() {
 		return id;
@@ -81,6 +96,22 @@ public class User {
 
 	public void setConfirm(String confirm) {
 		this.confirm = confirm;
+	}
+
+	public List<Book> getBooks() {
+		return books;
+	}
+
+	public void setBooks(List<Book> books) {
+		this.books = books;
+	}
+
+	public List<Book> getBorrowedbooks() {
+		return Borrowedbooks;
+	}
+
+	public void setBorrowedbooks(List<Book> borrowedbooks) {
+		Borrowedbooks = borrowedbooks;
 	}
     
     
