@@ -1,10 +1,10 @@
-package com.example.week4;
+package com.user.fitness;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Week4ApplicationTests {
+class Week5UserFitnessApplicationTests {
 
 	@Test
 	void contextLoads() {

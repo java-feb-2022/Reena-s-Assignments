@@ -10,11 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import com.user.projects.models.LoginUser;
 import com.user.projects.models.Project;
@@ -30,7 +30,11 @@ public class HomeController {
 	
 	@Autowired
 	private ProjectService projectService;
+	
+	@Autowired 
+	private HttpSession session;
 
+	
 	@GetMapping("/")
 	public String index(
 			@ModelAttribute("newUser") User user, 
@@ -41,8 +45,7 @@ public class HomeController {
 // ************Register a User***************
 	@PostMapping("/registration")
 	public String registerUser(@Valid @ModelAttribute("newUser") User user,
-			BindingResult result, HttpSession session
-		
+			BindingResult result
 			) {
 //		Validate user
 		userService.validate(user, result);
@@ -53,6 +56,7 @@ public class HomeController {
 	                System.out.print(error.getDefaultMessage());
 	              } 
 			System.out.println();
+			
 			return "index.jsp";
 		}
 //		Register User
@@ -67,7 +71,7 @@ public class HomeController {
 	public String loginUser(
 			@Valid @ModelAttribute("newLogin") LoginUser loginuser, 
 			BindingResult results, 
-			HttpSession session,  
+			
 			@ModelAttribute("newUser") User user) {
 		// Authenticate User
 		userService.authenticateUser(loginuser, results);
@@ -82,17 +86,20 @@ public class HomeController {
 
 //****************Logout*********************
 	@GetMapping("/logout")
-	public String logout(HttpSession session) {
+	public String logout() {
 		session.invalidate();
 		return "redirect:/";
 	}
 
 //	 **********************Project Routes************************* 
 	@GetMapping("/dashboard")
-	public String dashboard(HttpSession session, Model projectModel) {
+	public String dashboard(Model projectModel) {
 //		Check if user is in session
 		if(session.getAttribute("loggedInUser")!=null) {
+			User user=(User)session.getAttribute("loggedInUser");
+			User userLoggedIn=userService.findById(user.getId());
 			projectModel.addAttribute("projects", projectService.allProjects());
+			projectModel.addAttribute("userLoggedIn",userLoggedIn);
 			return "dashboard.jsp";
 		}
 		else {
@@ -102,7 +109,7 @@ public class HomeController {
 //	Check if user is in session for all get routes
 //	New Project
 	@GetMapping("/new")
-	public String newProject(HttpSession session,@ModelAttribute("newProject") Project project) {
+	public String newProject(@ModelAttribute("newProject") Project project) {
 	  if(session.getAttribute("loggedInUser")!=null) {
 			return "new.jsp";
 		}
@@ -141,7 +148,7 @@ public class HomeController {
 	
 //	Delete project 
 	@GetMapping("/delete/{id}")
-	public String deleteProject(@PathVariable Long id, HttpSession session) {
+	public String deleteProject(@PathVariable Long id) {
 		if(session.getAttribute("loggedInUser")!=null) {
 			projectService.deleteProject(id);
 			return "redirect:/dashboard";
@@ -152,11 +159,51 @@ public class HomeController {
 		
 	}
 
-//	For you to do 
 	
-//	Edit Project 
-//	Update Project 
+//	Edit Page 
+
+	@GetMapping("/edit/{id}")
+	public String edit(@PathVariable("id") Long id, @ModelAttribute("editedProject") Project project, Model model,
+			HttpSession session) {
+		Project editProject = projectService.getOneProject(id);
+		model.addAttribute("editProject", editProject);
+		return "edit.jsp";
+	}
+
+	// Update project
+	@PutMapping("/update/{id}")
+	public String update(@PathVariable("id") Long id, @Valid @ModelAttribute("editedProject") Project project,
+			BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			return "edit.jsp";
+		} else {
+			projectService.updateProject(project);
+			return "redirect:/dashboard";
+
+		}
+	}
+
 	
+//	Like Project 
+	@GetMapping("/project/{id}/like")
+	public String likeProject(@PathVariable Long id) {
+		Project project=projectService.getOneProject(id);
+		User user=(User)session.getAttribute("loggedInUser");
+		User UserWhoIsLiking=userService.findById(user.getId());
+		projectService.likeProject(project, UserWhoIsLiking);
+		return "redirect:/dashboard";
+	}
+	
+//	Unlike
+	@GetMapping("/project/{id}/unLike")
+	public String UnlikeProject(@PathVariable Long id) {
+		Project project=projectService.getOneProject(id);
+		User user=(User)session.getAttribute("loggedInUser");
+		User UserWhoIsUnLiking=userService.findById(user.getId());
+		projectService.unLikeProject(project, UserWhoIsUnLiking);
+		return "redirect:/dashboard";
+	}
+
 	
 
 }

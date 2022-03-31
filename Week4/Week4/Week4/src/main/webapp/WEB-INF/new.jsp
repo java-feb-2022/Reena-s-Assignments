@@ -14,7 +14,7 @@
 <body>
 <h1>New Art</h1>
 
-<form:form action="/create" method="post" modelAttribute="art">
+<form:form action="/create" method="post" modelAttribute="art" enctype="multipart/form-data" >
 
 <p>
  		<form:errors class="text-danger" path="title"/>
@@ -25,7 +25,13 @@
         <form:label path="description">Description</form:label>
         <form:errors class="text-danger"  path="description"/>
         <form:textarea path="description"/>
+        
     </p>
+    <p>
+     <form:label path="description">Art Image</form:label>
+	       <input type="file" name="pic" id="fileToUpload" >
+	   
+	     </p>
 <button>Submit</button>
 </form:form>
 

@@ -25,7 +25,7 @@
 <tbody>
 	<c:forEach items="${arts}" var="art">
 	<tr>
-	<td>${art.title} </td>
+    <td> <a href="/arts/art/${art.id}">${art.title}"</a></td>
 	<td>${art.description} </td>
 	<td>
 	

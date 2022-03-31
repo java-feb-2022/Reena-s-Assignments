@@ -41,6 +41,10 @@ public class ArtService {
 		artRepo.deleteById(id);
 	}
 	
+	// Get One art
+		public Art getOneArt(Long id) {
+			return artRepo.findById(id).orElse(null);
+		}
 
 	
 }

@@ -6,14 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.user.projects.models.Project;
-
+import com.user.projects.models.User;
 import com.user.projects.repositories.ProjectRepository;
+import com.user.projects.repositories.UserRepository;
 
 @Service
 public class ProjectService {
 
 	@Autowired
 	private ProjectRepository projectRepo;
+	@Autowired
+	private UserRepository userRepo;
 
 	// List all projects
 	public List<Project> allProjects() {
@@ -39,4 +42,17 @@ public class ProjectService {
 		return projectRepo.save(project);
 
 	}
+//	Like
+	public void likeProject(Project project, User user) {
+			List<User> likers=project.getLikers();
+			likers.add(user);
+			projectRepo.save(project);
+	}
+//	Unlike
+	public void unLikeProject(Project project, User user) {
+		List<User> likers=project.getLikers();
+		likers.remove(user);
+		projectRepo.save(project);
+}
+	
 }

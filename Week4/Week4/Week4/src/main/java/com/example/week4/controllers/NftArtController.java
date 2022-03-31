@@ -1,5 +1,11 @@
 package com.example.week4.controllers;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +18,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.week4.models.Art;
 import com.example.week4.services.ArtService;
+
 
 
 @Controller
@@ -23,6 +32,8 @@ public class NftArtController {
 	
 	@Autowired
 	private ArtService artService;
+	private String IMAGE_FOLDER="src/main/resources/static/imgs/";
+
 	
 	@GetMapping("/")
 	public String index(Model viewModel) {
@@ -37,12 +48,29 @@ public class NftArtController {
 	}
 	
 	@PostMapping("/create")
-	public String create(@Valid @ModelAttribute("art") Art art, BindingResult result) {
-		if(result.hasErrors()) {
-			return "new.jsp";
+	public String create(@Valid @ModelAttribute("art") Art art, BindingResult result,@RequestParam("pic") MultipartFile file) {
+		if(file.isEmpty()) {
+			System.err.println("No file");
 		}
 		else {
-			artService.createArt(art);
+			System.out.println(file.getOriginalFilename());
+			try {
+				byte[] bytes=file.getBytes();
+				Path path=Paths.get(IMAGE_FOLDER + file.getOriginalFilename());
+				FileOutputStream output = new FileOutputStream(IMAGE_FOLDER+file.getOriginalFilename());
+			     output.write(file.getBytes());
+				art.setArtUrl("/imgs/" + file.getOriginalFilename());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if (result.hasErrors()) {
+			
+			return "new.jsp";
+		} else {
+			System.err.println(art.getArtUrl());	
+		   artService.createArt(art);
 			return "redirect:/";
 		}
 	}
@@ -81,6 +109,13 @@ public class NftArtController {
 		return "redirect:/";
 	
 	}
+	@GetMapping("/arts/art/{id}")
+	public String project(@PathVariable("id") Long artId, Model model, HttpSession session) {
+		Art art = artService.getOneArt(artId);
+		model.addAttribute("art", art);
+		return "art.jsp";
+	}
+
 	
 	
 	

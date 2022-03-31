@@ -24,7 +24,7 @@ public class Art {
 	 @Size(min = 5, max = 200, message="Are being funny!!!")
 	 private String description;
 	 
-	 
+	 private String artUrl;
 
 	public long getId() {
 		return id;
@@ -48,6 +48,14 @@ public class Art {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getArtUrl() {
+		return artUrl;
+	}
+
+	public void setArtUrl(String artUrl) {
+		this.artUrl = artUrl;
 	}
 
 	

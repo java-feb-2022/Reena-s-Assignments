@@ -1,6 +1,6 @@
 package com.user.projects.models;
 
-import java.awt.print.Book;
+
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -8,6 +8,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -41,21 +44,28 @@ public class User {
     private String confirm;
     
 //Define relationship	
-  @OneToMany(mappedBy ="user", fetch=FetchType.LAZY)
+  @OneToMany(mappedBy ="user", fetch=FetchType.EAGER)
   private List<Project> projects;
+	
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "likes", 
+      joinColumns = @JoinColumn(name = "user_id"), 
+      inverseJoinColumns = @JoinColumn(name = "project_id")
+  )
+  private List<Project> projectLiked;;
   
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public String getUserName() {
 		return userName;
 	}
+
+	public Long getId() {
+	return id;
+}
+
+public void setId(Long id) {
+	this.id = id;
+}
 
 	public void setUserName(String userName) {
 		this.userName = userName;
@@ -92,7 +102,17 @@ public class User {
 	public void setProjects(List<Project> projects) {
 		this.projects = projects;
 	}
-     
+
+	public List<Project> getProjectLiked() {
+		return projectLiked;
+	}
+
+	public void setProjectLiked(List<Project> projectLiked) {
+		this.projectLiked = projectLiked;
+	}
+	
+	
+
 	
 	
 }
